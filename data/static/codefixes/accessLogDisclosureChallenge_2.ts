@@ -1,7 +1,7 @@
 /* /ftp directory browsing and file download */
-  app.use('/ftp', serveIndexMiddleware, serveIndex('ftp', { icons: true }))
-  app.use('/ftp(?!/quarantine)/:file', fileServer())
-  app.use('/ftp/quarantine/:file', quarantineServer())
+  app.use('/ftp', authenticate, serveIndexMiddleware, serveIndex('ftp', { icons: true }))
+  app.use('/ftp(?!/quarantine)/:file', authenticate, fileServer())
+  app.use('/ftp/quarantine/:file', authenticate, quarantineServer())
 
   app.use('/.well-known', serveIndexMiddleware, serveIndex('.well-known', { icons: true, view: 'details' }))
   app.use('/.well-known', express.static('.well-known'))
