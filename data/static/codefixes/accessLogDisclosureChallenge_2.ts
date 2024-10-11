@@ -7,8 +7,18 @@
   app.use('/.well-known', express.static('.well-known'))
 
   /* /encryptionkeys directory browsing */
-  app.use('/encryptionkeys', serveIndexMiddleware, serveIndex('encryptionkeys', { icons: true, view: 'details' }))
-  app.use('/encryptionkeys/:file', keyServer())
+  const authenticateUser = (req, res, next) => {
+    // This is a placeholder. In a real application, you would implement proper authentication here.
+    // For example, checking for a valid session token or API key.
+    if (req.headers['authorization'] === 'SecretAPIKey') {
+      next();
+    } else {
+      res.status(401).send('Unauthorized');
+    }
+  };
+
+  app.use('/encryptionkeys', authenticateUser, serveIndexMiddleware, serveIndex('encryptionkeys', { icons: true, view: 'details' }))
+  app.use('/encryptionkeys/:file', authenticateUser, keyServer())
 
   /* /logs directory browsing */
   app.use('/support/logs', serveIndexMiddleware, serveIndex('logs', { icons: true }))
