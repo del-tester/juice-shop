@@ -20,10 +20,15 @@ module.exports = function searchProducts () {
   return (req: Request, res: Response, next: NextFunction) => {
     let criteria: any = req.query.q === 'undefined' ? '' : req.query.q ?? ''
     criteria = (criteria.length <= 200) ? criteria : criteria.substring(0, 200)
+    // Fix: Use parameterized query to prevent SQL injection
+    // The previous version used string interpolation, which is vulnerable to SQL injection attacks
+    // Now we use a prepared statement with a placeholder (:criteria) and pass the value separately
     models.sequelize.query(
       'SELECT * FROM Products WHERE ((name LIKE :criteria OR description LIKE :criteria) AND deletedAt IS NULL) ORDER BY name',
       {
+        // The criteria is passed as a replacement, safely escaping any special characters
         replacements: { criteria: `%${criteria}%` },
+        // Explicitly specify the query type as SELECT for clarity and safety
         type: models.sequelize.QueryTypes.SELECT
       }
     ).then((products: any) => {
