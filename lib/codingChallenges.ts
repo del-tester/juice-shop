@@ -12,7 +12,8 @@ interface FileMatch {
 interface CachedCodeChallenge {
   snippet: string
   vulnLines: number[]
-  neutralLines: number[]
+  neutralLines: number[], 
+  thingos: number[]
 }
 
 export const findFilesWithCodeChallenges = async (paths: readonly string[]): Promise<FileMatch[]> => {
