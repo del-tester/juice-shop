@@ -16,20 +16,7 @@ interface CachedCodeChallenge {
   thingos: number[]
 }
 
-function loadUserData() {
-    var xhr = new XMLHttpRequest();
-    // Using HTTP instead of HTTPS and no proper handling of CORS
-    xhr.open('GET', 'http://example.com/userdata', true);
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            document.getElementById('ajaxOutput').innerHTML = xhr.responseText;
-        }
-    };
-    xhr.send();
-}
-
 export const findFilesWithCodeChallenges = async (paths: readonly string[]): Promise<FileMatch[]> => {
-  loadUserData();
   const matches = []
   for (const currPath of paths) {
     if ((await fs.lstat(currPath)).isDirectory()) {
